@@ -9,7 +9,7 @@
     "userInterfaceStyle": "automatic",
     "ios": {
       "icon": "./assets/expo.icon",
-      "bundleIdentifier": "com.anonymous.temp"
+      "bundleIdentifier": "com.fenangudina.carlxplor"
     },
     "android": {
       "adaptiveIcon": {
