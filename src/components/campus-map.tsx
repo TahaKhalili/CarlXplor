@@ -1,17 +1,25 @@
 import { Camera, GeoJSONSource, Layer, Map } from "@maplibre/maplibre-react-native";
 import * as turf from "@turf/turf";
+import { useMemo } from "react";
 
+import { CAMPUS_BOUNDS, CAMPUS_CENTER, FOG_EXTENT } from "@/constants/campus";
+import type { ClearedArea } from "@/utilities/explored";
 
-const CAMPUS_BOX: [number, number, number, number] = [-93.162, 44.455, -93.143, 44.468];
-const fog = turf.bboxPolygon(CAMPUS_BOX);
+type CampusMapProps = {
+  cleared: ClearedArea;
+};
 
+export default function CampusMap({ cleared }: CampusMapProps) {
+  const fog = useMemo(() => {
+    if (!cleared) return FOG_EXTENT;
+    return turf.difference(turf.featureCollection([FOG_EXTENT, cleared])) ?? turf.featureCollection([]);
+  }, [cleared]);
 
-export default function CampusMap() {
   return (
     <Map style={{ flex: 1 }} mapStyle="https://tiles.openfreemap.org/styles/liberty">
       <Camera
-        initialViewState={{ center: [-93.1534, 44.4613], zoom: 10 }}
-        maxBounds={[-93.158634, 44.460488, -93.146167, 44.466659]}
+        initialViewState={{ center: CAMPUS_CENTER, zoom: 16 }}
+        maxBounds={CAMPUS_BOUNDS}
         minZoom={16}
       />
       <GeoJSONSource id="fog" data={fog}>
