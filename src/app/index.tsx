@@ -5,6 +5,11 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import CampusMap from '@/components/campus-map';
 import Progress from '@/components/progress/progress';
 import { getExploredPercent, type ClearedArea } from '@/utilities/explored';
+import PlusButton from '@/components/buttons';
+import CrownButton from '@/components/leaderboard';
+import LocationButton from '@/components/location';
+import { mapStyles } from '@/components/mapStyles';
+import ProfileButton from '@/components/profile';
 
 export default function HomeScreen() {
   const insets = useSafeAreaInsets();
@@ -16,7 +21,21 @@ export default function HomeScreen() {
   return (
     <View style={styles.container}>
       <CampusMap cleared={cleared} />
-      <Progress percent={percent} style={[styles.progress, { top: insets.top + 8 }]} />
+
+      <Progress
+        percent={percent}
+        style={[styles.progress, { top: insets.top + 8 }]}
+      />
+
+      <View style={mapStyles.topButtons}>
+        <ProfileButton />
+        <LocationButton />
+        <CrownButton />
+      </View>
+
+      <View style={mapStyles.bottomButton}>
+        <PlusButton />
+      </View>
     </View>
   );
 }
