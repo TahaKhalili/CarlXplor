@@ -10,6 +10,8 @@ import CrownButton from '@/components/leaderboard';
 import LocationButton from '@/components/location';
 import { mapStyles } from '@/components/mapStyles';
 import ProfileButton from '@/components/profile';
+import { useEffect } from 'react';
+import { startLocation, stopLocation } from '@/location';
 
 export default function HomeScreen() {
   const insets = useSafeAreaInsets();
@@ -17,6 +19,11 @@ export default function HomeScreen() {
   const [cleared, setCleared] = useState<ClearedArea>(null);
 
   const percent = useMemo(() => getExploredPercent(cleared), [cleared]);
+
+  useEffect(() => {
+    startLocation();
+    return () => stopLocation();
+  }, []);
 
   return (
     <View style={styles.container}>
