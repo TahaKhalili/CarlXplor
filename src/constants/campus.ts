@@ -1,10 +1,27 @@
-import { bboxPolygon } from '@turf/turf';
+import { polygon } from '@turf/turf';
 
 type BBox = [number, number, number, number];
 
-export const CAMPUS_BOUNDS: BBox = [-93.158634, 44.460488, -93.146167, 44.466659];
-export const CAMPUS_AREA = bboxPolygon(CAMPUS_BOUNDS);
+export const CAMPUS_BOUNDS: BBox = [-93.1605, 44.4555, -93.1435, 44.4685];
 
-export const FOG_EXTENT = bboxPolygon([-93.162, 44.455, -93.143, 44.468]);
+export const CAMPUS_AREA = polygon([[
+  [-93.157068, 44.456286],
+  [-93.157037, 44.458543],
+  [-93.158796, 44.458560],
+  [-93.159767, 44.458560],
+  [-93.159033, 44.459644],
+  [-93.159123, 44.461298],
+  [-93.157359, 44.465174],
+  [-93.152276, 44.467870],
+  [-93.144501, 44.467719],
+  [-93.144129, 44.462031],
+  [-93.144263, 44.456936],
+  [-93.147757, 44.458509],
+  [-93.155392, 44.458524],
+  [-93.155362, 44.456309],
+  [-93.157068, 44.456286],
+]]);
+
+export const FOG_EXTENT = CAMPUS_AREA;
 
 export const CAMPUS_CENTER: [number, number] = [-93.1534, 44.4613];

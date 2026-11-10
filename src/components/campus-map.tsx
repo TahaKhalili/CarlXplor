@@ -1,4 +1,4 @@
-import { Camera, GeoJSONSource, Layer, Map } from "@maplibre/maplibre-react-native";
+import { Camera, GeoJSONSource, Layer, Map, NativeUserLocation } from "@maplibre/maplibre-react-native";
 import * as turf from "@turf/turf";
 import { useMemo } from "react";
 
@@ -18,9 +18,9 @@ export default function CampusMap({ cleared }: CampusMapProps) {
   return (
     <Map style={{ flex: 1 }} mapStyle="https://tiles.openfreemap.org/styles/liberty">
       <Camera
-        initialViewState={{ center: CAMPUS_CENTER, zoom: 16 }}
+        initialViewState={{ center: CAMPUS_CENTER, zoom: 17 }}
         maxBounds={CAMPUS_BOUNDS}
-        minZoom={16}
+        minZoom={15}
       />
       <GeoJSONSource id="fog" data={fog}>
         <Layer
@@ -30,6 +30,7 @@ export default function CampusMap({ cleared }: CampusMapProps) {
           paint={{ "fill-color": "#DCE1EA", "fill-opacity": 0.8 }}
         />
       </GeoJSONSource>
+      <NativeUserLocation mode="heading" />
     </Map>
   );
 }
