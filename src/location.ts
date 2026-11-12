@@ -24,7 +24,7 @@ export function getPoints() {
   return points;
 }
 
-export async function startLocation() {
+export async function startLocation(onReading?: (loc: Location.LocationObject) => void) {
   if (subscription) return;  // already running
 
   const { status } = await Location.requestForegroundPermissionsAsync();
@@ -50,6 +50,7 @@ export async function startLocation() {
       };
       points.push(point);
       console.log(point);
+      onReading?.(loc);
     }
   );
 }
