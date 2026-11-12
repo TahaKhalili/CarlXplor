@@ -10,6 +10,7 @@ import CrownButton from '@/components/leaderboard';
 import LocationButton from '@/components/location';
 import { mapStyles } from '@/components/mapStyles';
 import ProfileButton from '@/components/profile';
+import GoogleSignInButton from '@/components/google-sign-in';
 import { useEffect } from 'react';
 import { startLocation, stopLocation } from '@/location';
 
@@ -114,6 +115,7 @@ export default function HomeScreen() {
             <Text style={styles.authButtonText}>Sign up</Text>
           </Pressable>
         )}
+        <GoogleSignInButton />
       </View>
     )
   }
