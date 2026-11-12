@@ -1,132 +1,10 @@
-// const express = require('express');
-// const pool = require('./db');
-
-// const app = express();
-// const PORT = process.env.PORT || 3000;
-
-// //Middleware to parse incoming JSON data in HTTP request
-// app.use(express.json());
-
-// app.get('/', (req,res) => {
-//     res.send('CarlXplor API!');
-// })
-// //Health-check route
-// app.get('/health', (req, res) => {
-//     res.json({ status: 'ok', message: 'CarlXplor Server is running!'});
-// });
-
-// //GET API
-// app.get('/api/exploration/:userId', async (req, res) => {
-//     const { userId } = req.params;
-
-//     try {
-//         const queryText = `
-//         SELECT
-//             user_id,
-//             exploration_percentage,
-//             ST_AsGeoJSON(explored_area) AS geojson_shape,
-//             updated_at
-//         FROM user_exploration
-//         WHERE user_id = $1;
-//     `;
-//     const result = await pool.query(queryText, [userId]);
-
-//     if(result.rows.length === 0) {
-//         return res.status(404).json({ error: 'User exploration data not found'});
-//     }
-
-//     const userData = result.rows[0];
-
-//     //Return structured response with parsed GeoJSON
-//     res.json({
-//         userId: userData.user_id,
-//         explorationPercentage: userData.exploration_percentage,
-//         exploredArea: JSON.parse(userData.geojson_shape),
-//         updatedAt: userData.updated_at
-//     });
-
-// } catch (error) {
-//     console.error('Error fetching user exploration data:', error);
-//     res.status(500).json({ error: 'Internal server error'});
-// }
-// });
-
-// //POST API
-// app.post('api/exploration/:userId/location', async (req, res) => {
-//     const { userId } = req.params;
-//     const { latitude, longitude, radius = 5} = req.body;
-
-//     //Validate incoming input
-//     if (!latitude || !longitude) {
-//         return res.status(400).json({
-//             error: 'Latitude and longitude are required in request body'
-//         });
-//     }
-
-//     try {
-//         const updateQuery = `
-//         UPDATE user_exploration
-//         SET
-//           explored_area = ST_Multi(
-//             ST_Union(
-//              COALESCE(
-//                explored_area,
-//                ST_SetSRID(ST_GeomFromText('MULTIPOLYGON EMPTY'), 4326)
-//              ),
-//              ST_Buffer(
-//               ST_SetSRID(ST_MakePoint($1, $2), 4326)::geography,
-//               $3
-//             )::geometry
-//           )
-//         ),
-//         updated_at = NOW()
-//         WHERE user_id = $4
-//         RETURNING
-//             user_id,
-//             exploration_percentage,
-//             ST_AsGeoJSON(explored_area) AS geojson_shape,
-//             updated_at;
-//     `;
-
-//     const values = [longitude, latitude, radius, userId];
-//     const result = await pool.query(updateQuery, values);
-
-//     if(result.rows.length === 0) {
-//         return res.status(404).json({ error: 'User record not found'});
-//     }
-
-//     const updatedData = result.rows[0];
-
-//     res.json({
-//         message: 'Exploration area expanded successfully!',
-//         userId: updatedData.userId,
-//         explorationPercentage: updatedData.exploration_percentage,
-//         exploredArea: JSON.parse(updatedData.geojson_shape),
-//         updatedAt: updatedData.updated_at
-//     });
-
-//     } catch (error) {
-//         console.error('Error updating exploration area:', error);
-//         res.status(500).json({ error: 'Internal server error' });
-//     }
-// });
-
-// const server = app.listen(PORT, '0.0.0.0', () => {
-//     console.log(`CarlXplor server is running at http://localhost:${PORT}`)
-//     console.log(`Local network URL: http://<What's this server's IP address>`)
-// });
-
-// server.on('error', (err) => {
-//     console.error('Server failed to start:', err.message);
-// });
-
 const express = require('express');
 const pool = require('./db');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Middleware to parse incoming JSON bodies (CRITICAL for POST requests)
+// Middleware to parse incoming JSON bodies (POST requests)
 app.use(express.json());
 
 // 1. Root route
@@ -134,7 +12,7 @@ app.get('/', (req, res) => {
   res.send('Welcome to the CarlXplor API!');
 });
 
-// 2. Health check route
+// 2. Health check route for testing
 app.get('/health', (req, res) => {
   res.json({ status: 'ok', message: 'CarlXplor server is running!' });
 });
