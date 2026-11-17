@@ -1,5 +1,5 @@
 import { MaterialIcons } from "@expo/vector-icons";
-import { Pressable } from "react-native";
+import { PressScale } from "../components/press-scale";
 import { mapStyles } from "../components/mapStyles";
 
 type LocationButtonProps = {
@@ -9,7 +9,7 @@ type LocationButtonProps = {
 
 export default function LocationButton({ active, onPress }: LocationButtonProps) {
   return (
-    <Pressable
+    <PressScale
       style={mapStyles.locationButton}
       onPress={onPress}
       accessibilityRole="button"
@@ -19,6 +19,6 @@ export default function LocationButton({ active, onPress }: LocationButtonProps)
         name="near-me"
         style={[mapStyles.locationIcon, { color: active ? "#6AA5E0" : "white" }]}
       />
-    </Pressable>
+    </PressScale>
   );
 }

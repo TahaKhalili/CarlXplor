@@ -1,14 +1,14 @@
 import { MaterialIcons } from "@expo/vector-icons";
-import { Pressable } from "react-native";
+import { PressScale } from "../components/press-scale";
 import { mapStyles } from "../components/mapStyles";
 
 export default function ProfileButton() {
   return (
-    <Pressable style={mapStyles.profileButton}>
+    <PressScale style={mapStyles.profileButton}>
       <MaterialIcons
         name="account-circle"
         style={mapStyles.profileIcon}
       />
-    </Pressable>
+    </PressScale>
   );
 }

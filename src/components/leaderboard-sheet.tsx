@@ -13,6 +13,7 @@ import {
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import { PressScale } from '@/components/press-scale';
 import Ring from '@/components/progress/ring';
 import { API_BASE_URL, USER_ID } from '@/location';
 import {
@@ -127,14 +128,14 @@ export default function LeaderboardSheet({ visible, onClose }: LeaderboardSheetP
               </Text>
             )}
           </View>
-          <Pressable
+          <PressScale
             onPress={onClose}
             hitSlop={8}
             accessibilityRole="button"
             accessibilityLabel="Close leaderboard"
             style={[styles.closeButton, { backgroundColor: colors.closeButton }]}>
             <Ionicons name="close" size={18} color={colors.closeIcon} />
-          </Pressable>
+          </PressScale>
         </View>
 
         {failed && (
