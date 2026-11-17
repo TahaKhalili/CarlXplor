@@ -28,7 +28,8 @@ import {
 
 const CARLETON_BLUE = '#003069';
 
-const palettes = {
+// Also used by the profile sheet, so the two screens match.
+export const palettes = {
   light: {
     background: '#E4E8EF',
     card: '#FFFFFF',
@@ -63,7 +64,7 @@ const palettes = {
   },
 };
 
-type Palette = typeof palettes.light;
+export type Palette = typeof palettes.light;
 
 async function loadEntries(percent?: number): Promise<LeaderboardEntry[]> {
   if (USE_SAMPLE_DATA) return getSampleEntries(USER_ID, new Date(), percent);

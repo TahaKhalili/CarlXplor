@@ -55,7 +55,7 @@ export default function HomeScreen() {
       />
 
       <View style={mapStyles.topButtons}>
-        <ProfileButton />
+        <ProfileButton percent={percent} />
         <LocationButton active={following} onPress={() => setFollowing(true)} />
         <CrownButton percent={percent} />
       </View>

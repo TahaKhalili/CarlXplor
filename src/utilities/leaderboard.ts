@@ -40,6 +40,16 @@ export function getHoursLeft(entry: LeaderboardEntry, now: Date = new Date()): n
   return Math.ceil(left);
 }
 
+// 1 -> "1st", 2 -> "2nd", 3 -> "3rd", 4 -> "4th", 11 -> "11th", 21 -> "21st"
+export function ordinal(n: number): string {
+  const lastTwo = n % 100;
+  if (lastTwo >= 11 && lastTwo <= 13) return `${n}th`;
+  if (n % 10 === 1) return `${n}st`;
+  if (n % 10 === 2) return `${n}nd`;
+  if (n % 10 === 3) return `${n}rd`;
+  return `${n}th`;
+}
+
 export function getBadge(laps: number | undefined): Badge {
   if (!laps) return null;
   if (laps >= 2) return 'platinum';
