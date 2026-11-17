@@ -3,20 +3,25 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import CampusMap from '@/components/campus-map';
-import Progress from '@/components/progress/progress';
-import { clearAlong, getExploredPercent, type ClearedArea } from '@/utilities/explored';
 import PlusButton from '@/components/buttons';
+import CampusMap from '@/components/campus-map';
+import GoogleSignInButton from '@/components/google-sign-in';
 import CrownButton from '@/components/leaderboard';
 import LocationButton from '@/components/location';
 import { mapStyles } from '@/components/mapStyles';
 import ProfileButton from '@/components/profile';
+import Progress from '@/components/progress/progress';
 import { startLocation, stopLocation } from '@/location';
+import { clearAlong, getExploredPercent, type ClearedArea } from '@/utilities/explored';
+
+import { useAuth } from '@clerk/expo';
 
 export default function HomeScreen() {
+  const { isLoaded, isSignedIn } = useAuth()
   const insets = useSafeAreaInsets();
 
   const [cleared, setCleared] = useState<ClearedArea>(null);
+  const [following, setFollowing] = useState(false);
   const lastSpot = useRef<[number, number] | null>(null);
 
   const percent = useMemo(() => getExploredPercent(cleared), [cleared]);
@@ -44,9 +49,17 @@ export default function HomeScreen() {
     return () => stopLocation();
   }, []);
 
+  if (isLoaded && !isSignedIn) {
+    return (
+      <View style={styles.auth}>
+        <GoogleSignInButton />
+      </View>
+    )
+  }
+
   return (
     <View style={styles.container}>
-      <CampusMap cleared={cleared} />
+      <CampusMap cleared={cleared} following={following} onFollowingChange={setFollowing} />
 
       <Progress
         percent={percent}
@@ -54,9 +67,9 @@ export default function HomeScreen() {
       />
 
       <View style={mapStyles.topButtons}>
-        <ProfileButton />
-        <LocationButton />
-        <CrownButton />
+        <ProfileButton percent={percent} />
+        <LocationButton active={following} onPress={() => setFollowing(true)} />
+        <CrownButton percent={percent} />
       </View>
 
       <View style={mapStyles.bottomButton}>
@@ -73,5 +86,10 @@ const styles = StyleSheet.create({
   progress: {
     position: 'absolute',
     left: 16,
+  },
+  auth: {
+    flex: 1,
+    justifyContent: 'center',
+    padding: 24,
   },
 });

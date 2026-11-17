@@ -1,14 +1,14 @@
 {
   "expo": {
-    "name": "temp",
+    "name": "CarlsXplor",
     "slug": "temp",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
+    "icon": "./assets/images/carlsxplor-icon.png",
     "scheme": "temp",
     "userInterfaceStyle": "automatic",
     "ios": {
-      "icon": "./assets/expo.icon",
+      "icon": "./assets/images/carlsxplor-icon.png",
       "bundleIdentifier": "com.fenangudina.carlxplor"
     },
     "android": {
@@ -29,9 +29,9 @@
       [
         "expo-splash-screen",
         {
-          "backgroundColor": "#208AEF",
-          "image": "./assets/images/splash-icon.png",
-          "imageWidth": 76
+          "backgroundColor": "#DCE1EA",
+          "image": "./assets/images/carlsxplor-splash-logo.png",
+          "imageWidth": 200
         }
       ],
       "@maplibre/maplibre-react-native",
@@ -44,7 +44,9 @@
       "expo-font",
       "expo-image",
       "expo-status-bar",
-      "expo-web-browser"
+      "expo-web-browser",
+      "@clerk/expo",
+      "expo-secure-store"
     ],
     "experiments": {
       "typedRoutes": true,

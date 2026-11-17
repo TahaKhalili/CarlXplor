@@ -1,14 +1,31 @@
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { Pressable } from "react-native";
+import { useState } from "react";
+import LeaderboardSheet from "./leaderboard-sheet";
 import { mapStyles } from "./mapStyles";
+import { PressScale } from "./press-scale";
 
-export default function CrownButton() {
+type CrownButtonProps = {
+  percent?: number; // your live percent explored
+};
+
+export default function CrownButton({ percent }: CrownButtonProps) {
+  const [open, setOpen] = useState(false);
+
   return (
-    <Pressable style={mapStyles.crownButton}>
-      <MaterialCommunityIcons
-        name="crown"
-        style={mapStyles.crownIcon}
-      />
-    </Pressable>
+    <>
+      <PressScale
+        style={mapStyles.crownButton}
+        onPress={() => setOpen(true)}
+        accessibilityRole="button"
+        accessibilityLabel="Open leaderboard"
+      >
+        <MaterialCommunityIcons
+          name="crown"
+          style={mapStyles.crownIcon}
+        />
+      </PressScale>
+
+      <LeaderboardSheet visible={open} onClose={() => setOpen(false)} percent={percent} />
+    </>
   );
 }

@@ -25,6 +25,20 @@ In the output, you'll find options to open the app in a
 
 You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
 
+## Run it on your iPhone
+
+1. Plug in your iPhone, run this, and pick your phone from the list:
+
+   ```bash
+   npm run ios:phone
+   ```
+
+   This installs a version with no developer menu. It runs without the laptop and uses the phone's real GPS.
+
+- Before you build from main, add the `.env` file with the Clerk key. Without it, the app stops at startup.
+- Everyone sets their own signing team and bundle ID locally in Xcode. Don't commit that change.
+- The leaderboard still shows sample players.
+
 ## Get a fresh project
 
 When you're ready, run:
