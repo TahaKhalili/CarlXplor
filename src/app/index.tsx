@@ -17,6 +17,7 @@ export default function HomeScreen() {
   const insets = useSafeAreaInsets();
 
   const [cleared, setCleared] = useState<ClearedArea>(null);
+  const [following, setFollowing] = useState(false);
   const lastSpot = useRef<[number, number] | null>(null);
 
   const percent = useMemo(() => getExploredPercent(cleared), [cleared]);
@@ -46,7 +47,7 @@ export default function HomeScreen() {
 
   return (
     <View style={styles.container}>
-      <CampusMap cleared={cleared} />
+      <CampusMap cleared={cleared} following={following} onFollowingChange={setFollowing} />
 
       <Progress
         percent={percent}
@@ -55,7 +56,7 @@ export default function HomeScreen() {
 
       <View style={mapStyles.topButtons}>
         <ProfileButton />
-        <LocationButton />
+        <LocationButton active={following} onPress={() => setFollowing(true)} />
         <CrownButton />
       </View>
 

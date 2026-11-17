@@ -29,26 +29,20 @@ const CARLETON_BLUE = '#003069';
 
 const palettes = {
   light: {
-    background: '#F2F2F7',
+    background: '#E4E8EF',
     card: '#FFFFFF',
-    text: '#000000',
-    secondary: '#636366',
-    separator: '#E5E5EA',
+    text: '#1B2A5C',
+    secondary: '#55607F',
+    separator: '#E6E8EF',
     ring: CARLETON_BLUE,
-    track: '#E5E5EA',
+    track: '#E6E8EF',
     onRing: '#FFFFFF',
     platinum: '#8E8E93',
-    firstCard: '#000000',
-    firstText: '#FFFFFF',
-    firstSecondary: '#C7C7CC',
-    firstRing: '#FFFFFF',
-    firstTrack: '#3A3A3C',
-    firstOnRing: CARLETON_BLUE,
-    youCard: '#DCE9FF',
-    youTrack: '#FFFFFF',
-    closeButton: '#E3E3E8',
-    closeIcon: '#3C3C43',
-    barBorder: '#D1D1D6',
+    youCard: '#FFFFFF',
+    youTrack: '#E6E8EF',
+    youRow: '#EEF4FF', // your row when it shows up inside the list
+    closeButton: '#8E9199',
+    closeIcon: '#FFFFFF',
   },
   dark: {
     background: '#000000',
@@ -60,17 +54,11 @@ const palettes = {
     track: '#38383A',
     onRing: '#000000',
     platinum: '#C7C7CC',
-    firstCard: '#FFFFFF',
-    firstText: '#000000',
-    firstSecondary: '#636366',
-    firstRing: CARLETON_BLUE,
-    firstTrack: '#E5E5EA',
-    firstOnRing: '#FFFFFF',
-    youCard: '#12305C',
-    youTrack: '#1C1C1E',
-    closeButton: '#2C2C2E',
-    closeIcon: '#EBEBF5',
-    barBorder: '#38383A',
+    youCard: '#1C1C1E',
+    youTrack: '#38383A',
+    youRow: '#12305C',
+    closeButton: '#636366',
+    closeIcon: '#FFFFFF',
   },
 };
 
@@ -181,7 +169,7 @@ export default function LeaderboardSheet({ visible, onClose }: LeaderboardSheetP
               <View>
                 <View style={styles.podium}>
                   {topThree[1] && <PodiumColumn entry={topThree[1]} height={162} colors={colors} />}
-                  {topThree[0] && <PodiumColumn entry={topThree[0]} height={190} first colors={colors} />}
+                  {topThree[0] && <PodiumColumn entry={topThree[0]} height={196} first colors={colors} />}
                   {topThree[2] && <PodiumColumn entry={topThree[2]} height={138} colors={colors} />}
                 </View>
                 {rest.length > 0 && (
@@ -209,9 +197,13 @@ export default function LeaderboardSheet({ visible, onClose }: LeaderboardSheetP
           <View
             style={[
               styles.youBar,
-              { backgroundColor: colors.background, borderTopColor: colors.barBorder, paddingBottom: insets.bottom + 10 },
+              {
+                backgroundColor: colors.background,
+                // Inside this sheet the iOS inset includes the tab bar, which left a big gap.
+                paddingBottom: Platform.OS === 'ios' ? 34 : insets.bottom + 10,
+              },
             ]}>
-            <View style={[styles.youCard, { backgroundColor: colors.youCard }]}>
+            <View style={[styles.youCard, styles.cardShadow, { backgroundColor: colors.youCard }]}>
               <View style={styles.ringBox}>
                 <RankRing entry={you} size={38} stroke={4} trackColor={colors.youTrack} colors={colors} />
               </View>
@@ -219,7 +211,12 @@ export default function LeaderboardSheet({ visible, onClose }: LeaderboardSheetP
                 <Text style={[styles.username, styles.bold, { color: colors.text }]} numberOfLines={1}>
                   {you.username}
                 </Text>
-                <Text style={[styles.caption, { color: colors.text }]}>You</Text>
+                <View style={styles.youLine}>
+                  <View style={styles.locationHalo}>
+                    <View style={styles.locationDot} />
+                  </View>
+                  <Text style={[styles.caption, { color: colors.secondary }]}>You</Text>
+                </View>
               </View>
               <Text style={[styles.percent, { color: colors.text }]}>{formatPercent(you.percent)}</Text>
             </View>
@@ -234,18 +231,13 @@ type RankRingProps = {
   entry: RankedEntry;
   size: number;
   stroke: number;
-  first?: boolean;
   trackColor?: string;
   colors: Palette;
 };
 
 // The rank number inside a circle that fills with the percent explored.
 // Finishers get a solid disc.
-function RankRing({ entry, size, stroke, first, trackColor, colors }: RankRingProps) {
-  const ringColor = first ? colors.firstRing : colors.ring;
-  const onRing = first ? colors.firstOnRing : colors.onRing;
-  const numberColor = first ? colors.firstText : colors.text;
-
+function RankRing({ entry, size, stroke, trackColor, colors }: RankRingProps) {
   let fontSize = size > 44 ? 22 : 13;
   if (entry.rank > 99) fontSize = 11;
 
@@ -254,10 +246,10 @@ function RankRing({ entry, size, stroke, first, trackColor, colors }: RankRingPr
       size={size}
       stroke={stroke}
       percent={entry.percent}
-      color={ringColor}
-      trackColor={trackColor ?? (first ? colors.firstTrack : colors.track)}
+      color={colors.ring}
+      trackColor={trackColor ?? colors.track}
       filled={entry.finished}>
-      <Text style={[styles.rankNumber, { fontSize, color: entry.finished ? onRing : numberColor }]}>
+      <Text style={[styles.rankNumber, { fontSize, color: entry.finished ? colors.onRing : colors.text }]}>
         {entry.rank}
       </Text>
     </Ring>
@@ -285,23 +277,32 @@ type PodiumColumnProps = {
   colors: Palette;
 };
 
+// First place uses the same colors as the others. It stands out by being
+// taller, having a bigger ring and a crown above the ring.
 function PodiumColumn({ entry, height, first, colors }: PodiumColumnProps) {
-  const textColor = first ? colors.firstText : colors.text;
-  const secondaryColor = first ? colors.firstSecondary : colors.secondary;
-
   return (
-    <View style={[styles.column, { height, backgroundColor: first ? colors.firstCard : colors.card }]}>
+    <View style={[styles.column, styles.cardShadow, { height, backgroundColor: colors.card }]}>
       <View style={styles.columnTop}>
-        <RankRing entry={entry} size={first ? 60 : 50} stroke={5} first={first} colors={colors} />
-        {!first && <BadgeIcon entry={entry} colors={colors} />}
+        <View style={styles.ringStack}>
+          {first && (
+            <MaterialCommunityIcons
+              name="crown"
+              size={22}
+              color={colors.text}
+              accessibilityLabel="First place"
+            />
+          )}
+          <RankRing entry={entry} size={first ? 56 : 50} stroke={5} colors={colors} />
+        </View>
+        <BadgeIcon entry={entry} colors={colors} />
       </View>
       <View>
-        <Text style={[styles.columnName, { color: textColor }]} numberOfLines={1}>
+        <Text style={[styles.columnName, { color: colors.text }]} numberOfLines={1}>
           {entry.username}
         </Text>
-        <Text style={[styles.columnPercent, { color: textColor }]}>{formatPercent(entry.percent)}</Text>
+        <Text style={[styles.columnPercent, { color: colors.text }]}>{formatPercent(entry.percent)}</Text>
         {entry.finished && (
-          <Text style={[styles.columnCaption, { color: secondaryColor }]} numberOfLines={1}>
+          <Text style={[styles.columnCaption, { color: colors.secondary }]} numberOfLines={1}>
             {entry.hoursLeft}h left on top
           </Text>
         )}
@@ -323,18 +324,12 @@ function Row({ entry, isYou, isFirst, isLast, colors }: RowProps) {
     <View
       style={[
         styles.row,
-        { backgroundColor: isYou ? colors.youCard : colors.card },
+        { backgroundColor: isYou ? colors.youRow : colors.card },
         isFirst && styles.rowFirst,
         isLast && styles.rowLast,
       ]}>
       <View style={styles.ringBox}>
-        <RankRing
-          entry={entry}
-          size={38}
-          stroke={4}
-          trackColor={isYou ? colors.youTrack : undefined}
-          colors={colors}
-        />
+        <RankRing entry={entry} size={38} stroke={4} colors={colors} />
       </View>
       <View
         style={[
@@ -387,9 +382,9 @@ const styles = StyleSheet.create({
     marginTop: 2,
   },
   closeButton: {
-    width: 30,
-    height: 30,
-    borderRadius: 15,
+    width: 34,
+    height: 34,
+    borderRadius: 17,
     alignItems: 'center',
     justifyContent: 'center',
     marginTop: 6,
@@ -424,11 +419,19 @@ const styles = StyleSheet.create({
   podium: {
     flexDirection: 'row',
     alignItems: 'flex-end',
-    gap: 6,
+    gap: 8,
+  },
+  // Same soft shadow as the "Campus explored" card on the map
+  cardShadow: {
+    shadowColor: '#000',
+    shadowOpacity: 0.12,
+    shadowRadius: 8,
+    shadowOffset: { width: 0, height: 2 },
+    elevation: 4,
   },
   column: {
     flex: 1,
-    borderRadius: 22,
+    borderRadius: 16,
     paddingVertical: 14,
     paddingHorizontal: 12,
     justifyContent: 'space-between',
@@ -437,6 +440,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'flex-start',
     justifyContent: 'space-between',
+  },
+  ringStack: {
+    alignItems: 'center',
   },
   columnName: {
     fontSize: 15,
@@ -479,12 +485,12 @@ const styles = StyleSheet.create({
     paddingLeft: 12,
   },
   rowFirst: {
-    borderTopLeftRadius: 22,
-    borderTopRightRadius: 22,
+    borderTopLeftRadius: 16,
+    borderTopRightRadius: 16,
   },
   rowLast: {
-    borderBottomLeftRadius: 22,
-    borderBottomRightRadius: 22,
+    borderBottomLeftRadius: 16,
+    borderBottomRightRadius: 16,
   },
   ringBox: {
     width: 50,
@@ -531,7 +537,6 @@ const styles = StyleSheet.create({
 
   // Your own row, pinned to the bottom
   youBar: {
-    borderTopWidth: StyleSheet.hairlineWidth,
     paddingTop: 10,
     paddingHorizontal: 16,
   },
@@ -539,8 +544,30 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     minHeight: 60,
-    borderRadius: 18,
+    borderRadius: 16,
     paddingLeft: 12,
     paddingRight: 16,
+  },
+  youLine: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+  },
+  // Same blue dot as your location on the map
+  locationHalo: {
+    width: 16,
+    height: 16,
+    borderRadius: 8,
+    backgroundColor: 'rgba(59, 130, 246, 0.25)',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  locationDot: {
+    width: 12,
+    height: 12,
+    borderRadius: 6,
+    backgroundColor: '#3B82F6',
+    borderWidth: 2,
+    borderColor: '#FFFFFF',
   },
 });
