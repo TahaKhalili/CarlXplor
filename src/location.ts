@@ -3,8 +3,8 @@ import * as Location from 'expo-location';
 import { AppState } from 'react-native';
 
 // macOS server's local LAN IP
-const API_BASE_URL = 'http://192.168.1.45:3000'; 
-const USER_ID = 'test_student_Josh';
+export const API_BASE_URL = 'http://192.168.1.45:3000'; 
+export const USER_ID = 'test_student_Josh';
 const DEVICE_ID = 't01';
 
 let currentNote: string | null = null;
