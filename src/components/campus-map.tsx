@@ -1,9 +1,8 @@
+import { CAMPUS_BOUNDS, CAMPUS_CENTER, FOG_EXTENT, OUTSIDE_CAMPUS } from "@/constants/campus";
+import type { ClearedArea } from "@/utilities/explored";
 import { Camera, GeoJSONSource, Layer, Map, NativeUserLocation } from "@maplibre/maplibre-react-native";
 import * as turf from "@turf/turf";
 import { useMemo } from "react";
-
-import { CAMPUS_BOUNDS, CAMPUS_CENTER, FOG_EXTENT } from "@/constants/campus";
-import type { ClearedArea } from "@/utilities/explored";
 
 type CampusMapProps = {
   cleared: ClearedArea;
@@ -20,9 +19,17 @@ export default function CampusMap({ cleared }: CampusMapProps) {
       <Camera
         initialViewState={{ center: CAMPUS_CENTER, zoom: 17 }}
         maxBounds={CAMPUS_BOUNDS}
-        minZoom={15}
+        minZoom={14}
       />
-      <GeoJSONSource id="fog" data={fog}>
+      <GeoJSONSource key="outside-campus" id="outside-campus" data={OUTSIDE_CAMPUS}>
+        <Layer
+          id="outside-campus-fill"
+          type="fill"
+          source="outside-campus"
+          paint={{ "fill-color": "#0E2A47", "fill-opacity": 0.6 }}
+        />
+      </GeoJSONSource>
+      <GeoJSONSource key="fog" id="fog" data={fog}>
         <Layer
           id="fog-fill"
           type="fill"
