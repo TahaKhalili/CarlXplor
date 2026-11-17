@@ -4,7 +4,11 @@ import LeaderboardSheet from "./leaderboard-sheet";
 import { mapStyles } from "./mapStyles";
 import { PressScale } from "./press-scale";
 
-export default function CrownButton() {
+type CrownButtonProps = {
+  percent?: number; // your live percent explored
+};
+
+export default function CrownButton({ percent }: CrownButtonProps) {
   const [open, setOpen] = useState(false);
 
   return (
@@ -21,7 +25,7 @@ export default function CrownButton() {
         />
       </PressScale>
 
-      <LeaderboardSheet visible={open} onClose={() => setOpen(false)} />
+      <LeaderboardSheet visible={open} onClose={() => setOpen(false)} percent={percent} />
     </>
   );
 }

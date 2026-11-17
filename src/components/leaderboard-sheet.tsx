@@ -65,8 +65,8 @@ const palettes = {
 
 type Palette = typeof palettes.light;
 
-async function loadEntries(): Promise<LeaderboardEntry[]> {
-  if (USE_SAMPLE_DATA) return getSampleEntries(USER_ID);
+async function loadEntries(percent?: number): Promise<LeaderboardEntry[]> {
+  if (USE_SAMPLE_DATA) return getSampleEntries(USER_ID, new Date(), percent);
 
   const response = await fetch(`${API_BASE_URL}/api/leaderboard`);
   if (!response.ok) throw new Error(`Server returned status ${response.status}`);
@@ -76,9 +76,10 @@ async function loadEntries(): Promise<LeaderboardEntry[]> {
 type LeaderboardSheetProps = {
   visible: boolean;
   onClose: () => void;
+  percent?: number; // your live percent explored
 };
 
-export default function LeaderboardSheet({ visible, onClose }: LeaderboardSheetProps) {
+export default function LeaderboardSheet({ visible, onClose, percent }: LeaderboardSheetProps) {
   const scheme = useColorScheme();
   const colors = scheme === 'dark' ? palettes.dark : palettes.light;
   const insets = useSafeAreaInsets();
@@ -92,7 +93,7 @@ export default function LeaderboardSheet({ visible, onClose }: LeaderboardSheetP
 
     let cancelled = false;
 
-    loadEntries()
+    loadEntries(percent)
       .then((data) => {
         if (cancelled) return;
         setEntries(data);
@@ -106,7 +107,7 @@ export default function LeaderboardSheet({ visible, onClose }: LeaderboardSheetP
     return () => {
       cancelled = true;
     };
-  }, [visible, attempt]);
+  }, [visible, attempt, percent]);
 
   const ranked = entries ? rankEntries(entries) : [];
   const topThree = ranked.slice(0, 3);

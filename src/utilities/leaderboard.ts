@@ -81,7 +81,12 @@ export function rankEntries(entries: LeaderboardEntry[], now: Date = new Date())
 }
 
 // Made-up players so the screen works before the server route exists.
-export function getSampleEntries(currentUserId: string, now: Date = new Date()): LeaderboardEntry[] {
+// livePercent is how much of campus you have really explored; without it you are at 50.20%.
+export function getSampleEntries(
+  currentUserId: string,
+  now: Date = new Date(),
+  livePercent?: number,
+): LeaderboardEntry[] {
   const hoursAgo = (hours: number) => new Date(now.getTime() - hours * 60 * 60 * 1000).toISOString();
 
   return [
@@ -99,7 +104,7 @@ export function getSampleEntries(currentUserId: string, now: Date = new Date()):
     { userId: 'u12', username: 'willis_bell', percent: 74.63, updatedAt: hoursAgo(15) },
     { userId: 'u13', username: 'cave_dweller', percent: 71.08, updatedAt: hoursAgo(4) },
     { userId: 'u14', username: 'olin_owl', percent: 50.21, updatedAt: hoursAgo(6), laps: 2 },
-    { userId: currentUserId, username: 'fog_lifter', percent: 50.2, updatedAt: hoursAgo(1) },
+    { userId: currentUserId, username: 'fog_lifter', percent: livePercent ?? 50.2, updatedAt: hoursAgo(1) },
     { userId: 'u16', username: 'musser_mayor', percent: 50.12, updatedAt: hoursAgo(9) },
   ];
 }
