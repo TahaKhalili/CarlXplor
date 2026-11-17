@@ -48,6 +48,7 @@
     "reset-project": "node ./scripts/reset-project.js",
     "android": "expo run:android",
     "ios": "expo run:ios",
+    "ios:phone": "expo run:ios --configuration Release --device",
     "web": "expo start --web",
     "lint": "expo lint"
   },
