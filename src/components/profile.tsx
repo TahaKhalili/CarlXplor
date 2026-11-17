@@ -82,3 +82,48 @@ export default function ProfileButton() {
     </>
   );
 }
+
+const styles = StyleSheet.create({
+  overlay: {
+    flex: 1,
+    justifyContent: "flex-end",
+  },
+  backdrop: {
+    backgroundColor: "rgba(0, 0, 0, 0.45)",
+  },
+  sheet: {
+    height: "70%",
+    paddingHorizontal: Spacing.four,
+    paddingTop: Spacing.four,
+    borderTopLeftRadius: Spacing.three,
+    borderTopRightRadius: Spacing.three,
+  },
+  header: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: Spacing.three,
+  },
+  identity: {
+    flex: 1,
+  },
+  name: {
+    fontSize: 18,
+    fontWeight: "600",
+  },
+  email: {
+    fontSize: 14,
+    marginTop: Spacing.one,
+  },
+  logout: {
+    marginTop: Spacing.four,
+    backgroundColor: "#d32f2f",
+    borderRadius: 8,
+    paddingVertical: 12,
+    alignItems: "center",
+  },
+  logoutLabel: {
+    color: "#ffffff",
+    fontWeight: "600",
+    fontSize: 16,
+  },
+});
