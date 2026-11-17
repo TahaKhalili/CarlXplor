@@ -1,3 +1,4 @@
+import { useAuth, useUser } from "@clerk/expo";
 import { MaterialIcons } from "@expo/vector-icons";
 import { useState } from "react";
 import { Modal, Pressable, StyleSheet, Text, View } from "react-native";
@@ -75,7 +76,7 @@ export default function ProfileButton() {
 
             <Pressable style={styles.logout} onPress={handleLogout}>
               <Text style={styles.logoutLabel}>Log out</Text>
-    </Pressable>
+            </Pressable>
           </View>
         </View>
       </Modal>
