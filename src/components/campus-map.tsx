@@ -7,9 +7,11 @@ import type { ClearedArea } from "@/utilities/explored";
 
 type CampusMapProps = {
   cleared: ClearedArea;
+  following: boolean;
+  onFollowingChange: (following: boolean) => void;
 };
 
-export default function CampusMap({ cleared }: CampusMapProps) {
+export default function CampusMap({ cleared, following, onFollowingChange }: CampusMapProps) {
   const fog = useMemo(() => {
     if (!cleared) return FOG_EXTENT;
     return turf.difference(turf.featureCollection([FOG_EXTENT, cleared])) ?? turf.featureCollection([]);
@@ -21,6 +23,10 @@ export default function CampusMap({ cleared }: CampusMapProps) {
         initialViewState={{ center: CAMPUS_CENTER, zoom: 17 }}
         maxBounds={CAMPUS_BOUNDS}
         minZoom={15}
+        trackUserLocation={following ? "default" : undefined}
+        onTrackUserLocationChange={(event) => {
+          if (event.nativeEvent.trackUserLocation === null) onFollowingChange(false);
+        }}
       />
       <GeoJSONSource id="fog" data={fog}>
         <Layer

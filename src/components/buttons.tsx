@@ -1,14 +1,14 @@
 import { MaterialIcons } from "@expo/vector-icons";
-import { Pressable } from "react-native";
+import { PressScale } from "../components/press-scale";
 import { mapStyles } from "../components/mapStyles";
 
 export default function PlusButton() {
   return (
-    <Pressable style={mapStyles.plusButton}>
+    <PressScale style={mapStyles.plusButton}>
       <MaterialIcons
         name="add-circle"
         style={mapStyles.plusIcon}
       />
-    </Pressable>
+    </PressScale>
   );
 }

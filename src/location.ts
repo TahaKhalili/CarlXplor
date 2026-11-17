@@ -3,8 +3,8 @@ import * as Location from 'expo-location';
 import { AppState } from 'react-native';
 
 // macOS server's local LAN IP
-const API_BASE_URL = 'http://192.168.1.45:3000'; 
-const USER_ID = 'test_student_Josh';
+export const API_BASE_URL = 'http://192.168.1.45:3000'; 
+export const USER_ID = 'test_student_Josh';
 const DEVICE_ID = 't01';
 
 let currentNote: string | null = null;
@@ -50,11 +50,14 @@ async function syncLocationWithBackend(
       onPolygonUpdated(data.exploredArea);
     }
   } catch (error) {
-    console.error('Failed to sync location with Express:', error);
+    // warn, not error: an unreachable server should not show a red box
+    console.warn('Failed to sync location with Express:', error);
   }
 }
 
-export async function startLocation(onPolygonUpdated?: (geoJson: any) => void) {
+// onReading gets every accurate GPS reading, so the map can clear the fog
+// on the phone even when the server is not reachable.
+export async function startLocation(onReading?: (loc: Location.LocationObject) => void) {
   if (subscription) return; // already running
 
   const { status } = await Location.requestForegroundPermissionsAsync();
@@ -91,8 +94,11 @@ export async function startLocation(onPolygonUpdated?: (geoJson: any) => void) {
         return;
       }
 
-      // 3. Send valid coordinates to Express & update MapLibre
-      syncLocationWithBackend(point.lat, point.lon, onPolygonUpdated);
+      // 3. Let the map clear the fog right away
+      onReading?.(loc);
+
+      // 4. Send valid coordinates to Express
+      syncLocationWithBackend(point.lat, point.lon);
     }
   );
 }

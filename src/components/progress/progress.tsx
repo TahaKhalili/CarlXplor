@@ -1,5 +1,7 @@
 import { StyleProp, StyleSheet, Text, View, ViewStyle } from 'react-native';
 
+import { formatPercent } from '@/utilities/leaderboard';
+
 type ProgressProps = {
     percent: number;
     style?: StyleProp<ViewStyle>;
@@ -7,13 +9,13 @@ type ProgressProps = {
 
 export default function Progress({ percent, style }: ProgressProps) {
     const clamped = Math.max(0, Math.min(100, percent));
-    const label = clamped > 0 && clamped < 10 ? clamped.toFixed(1) : Math.round(clamped).toString();
 
     return (
         <View style={[styles.container, style]}>
             <View style={styles.row}>
                 <Text style={styles.label}>Campus explored</Text>
-                <Text style={styles.percent}>{label}%</Text>
+                {/* Same two-decimal format as the leaderboard and profile */}
+                <Text style={styles.percent}>{formatPercent(clamped)}</Text>
             </View>
             <View style={styles.track}>
                 <View style={[styles.fill, { width: `${clamped}%` }]} />
